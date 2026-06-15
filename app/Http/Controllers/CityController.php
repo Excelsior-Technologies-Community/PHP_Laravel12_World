@@ -2,15 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\City;        // 🔥 REQUIRED
-use App\Models\Country;     // 🔥 REQUIRED
+use App\Models\City;        
+use App\Models\Country;     
 use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $cities = City::with('country')->get();
+        $cities = City::with('country')
+            ->when($request->search, function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhereHas('country', function ($q) use ($request) {
+                        $q->where('name', 'like', '%' . $request->search . '%');
+                    });
+            })
+            ->orderBy('id', 'asc')
+            ->paginate(3)
+            ->withQueryString();
+
         return view('city.index', compact('cities'));
     }
 
@@ -32,7 +42,7 @@ class CityController extends Controller
             'country_id' => $request->country_id
         ]);
 
-       return redirect()->route('cities.index')
-    ->with('success', 'City added successfully!');
+        return redirect()->route('cities.index')
+            ->with('success', 'City added successfully!');
     }
 }

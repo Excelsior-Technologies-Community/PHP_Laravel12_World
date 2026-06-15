@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Country;   
+use App\Models\Country;
 use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $countries = Country::latest()->get();
+        $countries = Country::withCount('cities')
+            ->when($request->search, function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->search . '%');
+            })
+            ->orderBy('id', 'asc')
+            ->paginate(3)
+            ->withQueryString();
+
         return view('country.index', compact('countries'));
     }
 
@@ -29,6 +36,6 @@ class CountryController extends Controller
         ]);
 
         return redirect()->route('countries.index')
-    ->with('success', 'Country added successfully!');
+            ->with('success', 'Country added successfully!');
     }
 }
