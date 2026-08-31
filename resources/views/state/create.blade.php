@@ -4,23 +4,22 @@
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('cities.index') }}">Cities</a></li>
-        <li class="breadcrumb-item active">Add City</li>
+        <li class="breadcrumb-item"><a href="{{ route('states.index') }}">States</a></li>
+        <li class="breadcrumb-item active">Add State</li>
     </ol>
 </nav>
 
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card shadow-sm">
-            <div class="card-header"><h5 class="mb-0">➕ Add City</h5></div>
+            <div class="card-header"><h5 class="mb-0">➕ Add State / Province</h5></div>
             <div class="card-body">
-                <form method="POST" action="{{ route('cities.store') }}">
+                <form method="POST" action="{{ route('states.store') }}">
                     @csrf
 
                     <div class="mb-3">
                         <label class="form-label">Select Country <span class="text-danger">*</span></label>
-                        <select name="country_id" id="country_id" class="form-select @error('country_id') is-invalid @enderror"
-                            data-country-select="#state_id" required>
+                        <select name="country_id" class="form-select @error('country_id') is-invalid @enderror" required>
                             <option value="">-- Select Country --</option>
                             @foreach($countries as $country)
                                 <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>
@@ -32,16 +31,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Select State <span class="text-danger">*</span></label>
-                        <select name="state_id" id="state_id" class="form-select @error('state_id') is-invalid @enderror"
-                            data-selected-state="{{ old('state_id') }}" required>
-                            <option value="">-- Select State --</option>
-                        </select>
-                        @error('state_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">City Name <span class="text-danger">*</span></label>
+                        <label class="form-label">State / Province Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
                             value="{{ old('name') }}" required>
                         @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -54,7 +44,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-success">Save</button>
-                    <a href="{{ route('cities.index') }}" class="btn btn-secondary">Back</a>
+                    <a href="{{ route('states.index') }}" class="btn btn-secondary">Back</a>
                 </form>
             </div>
         </div>
